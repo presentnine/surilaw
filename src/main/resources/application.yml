@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url:
+    url: 
     username:
     password:
     driver-class-name: oracle.jdbc.driver.OracleDriver
