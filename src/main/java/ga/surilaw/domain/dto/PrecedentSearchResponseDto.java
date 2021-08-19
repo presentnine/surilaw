@@ -1,31 +1,18 @@
 package ga.surilaw.domain.dto;
 
-import ga.surilaw.domain.entity.Precedent;
+import ga.surilaw.domain.entity.PrecedentBrief;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PrecedentSearchResponseDto {
     int totalCount;
-    List<Precedent> precedentList;
-
-    public PrecedentSearchResponseDto(int totalCount, List<Precedent> precedentList) {
-        this.totalCount = totalCount;
-        this.precedentList = precedentList;
-    }
-
-    public int getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(int totalCount) {
-        this.totalCount = totalCount;
-    }
-
-    public List<Precedent> getPrecedentList() {
-        return precedentList;
-    }
-
-    public void setPrecedentList(List<Precedent> precedentList) {
-        this.precedentList = precedentList;
-    }
+    List<PrecedentBrief> precedentBriefList;
 }
