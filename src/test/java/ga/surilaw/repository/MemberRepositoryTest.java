@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @EnableJpaAuditing
-@Rollback(value = false)
+//@Rollback(value = false)
 class MemberRepositoryTest {
 
     @Autowired
@@ -28,7 +28,7 @@ class MemberRepositoryTest {
 
     @Test
     public void save() {
-        Member member = new Member("asdf@naver.com", "홍길동", "???", "????", 'C');
+        Member member = new Member("asdf@naver.com", "홍길동", "???", 'C');
 
         Member saveMember = memberRepository.save(member);
         Optional<Member> result = memberRepository.findById(saveMember.getMemberId());
@@ -39,7 +39,7 @@ class MemberRepositoryTest {
 
     @Test
     public void update(){
-        Member member = new Member("asdf@naver.com", "홍길동", "???", "????", 'C');
+        Member member = new Member("asdf@naver.com", "홍길동", "???", 'C');
         Member saveMember = memberRepository.save(member);
         Member findMember = memberRepository.findById(saveMember.getId()).get();
 
@@ -55,7 +55,7 @@ class MemberRepositoryTest {
 
     @Test
     public void delete() {
-        Member member = new Member("asdf@naver.com", "홍길동", "???", "????", 'C');
+        Member member = new Member("asdf@naver.com", "홍길동", "???", 'C');
         Member saveMember = memberRepository.save(member);
 
         em.flush();
@@ -73,7 +73,7 @@ class MemberRepositoryTest {
 
     @Test
     public void findByEmail(){
-        Member member = new Member("asdf@naver.com", "홍길동", "???", "????", 'C');
+        Member member = new Member("asdf@naver.com", "홍길동", "???", 'C');
         memberRepository.save(member);
 
         em.flush();
@@ -82,5 +82,11 @@ class MemberRepositoryTest {
         Member findMember = memberRepository.findByEmail("asdf@naver.com").orElse(null);
 
         assertThat(findMember.getMemberName()).isEqualTo("홍길동");
+    }
+
+    @Test
+    public void existsByEmail() {
+
+
     }
 }

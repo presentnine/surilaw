@@ -1,7 +1,7 @@
 package ga.surilaw.common.mapper;
 
-import ga.surilaw.dto.InsertPostInfoDto;
-import ga.surilaw.entity.PostInformation;
+import ga.surilaw.domain.dto.InsertPostInfoDto;
+import ga.surilaw.domain.entity.PostInformation;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

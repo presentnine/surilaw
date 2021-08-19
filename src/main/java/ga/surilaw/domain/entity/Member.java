@@ -1,21 +1,26 @@
 package ga.surilaw.domain.entity;
 
-import ga.surilaw.domain.dto.MemberDTO;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = "memberId")
-public class Member implements Persistable<String> {
+public class Member implements Persistable<String>, UserDetails {
 
     @Id
     @Column(name = "member_id")
@@ -30,9 +35,6 @@ public class Member implements Persistable<String> {
     @Column(name = "password_hash")
     private String passwordHash;
 
-    @Column(name = "password_salt")
-    private String passwordSalt;
-
     @Column(name = "created_date", updatable = false)
     @CreatedDate
     private LocalDate createdDate;
@@ -40,21 +42,11 @@ public class Member implements Persistable<String> {
     @Column(name = "member_type")
     private char memberType;
 
-    public Member(String email, String memberName, String passwordHash, String passwordSalt, char memberType) {
-        this.memberId= UUID.randomUUID().toString();
-        this.email = email;
-        this.memberName = memberName;
-        this.passwordHash = passwordHash;
-        this.passwordSalt = passwordSalt;
-        this.memberType = memberType;
-    }
-
     public Member(String email, String memberName, String passwordHash, char memberType) {
         this.memberId= UUID.randomUUID().toString();
         this.email = email;
         this.memberName = memberName;
         this.passwordHash = passwordHash;
-        this.passwordSalt = "";
         this.memberType = memberType;
     }
 
@@ -68,5 +60,51 @@ public class Member implements Persistable<String> {
     @Override
     public boolean isNew() {
         return createdDate == null;
+    }
+
+    //UserDetails 타입 필요 구현
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        GrantedAuthority authority;
+
+        if (this.memberType == 'A') {
+            authority = new SimpleGrantedAuthority("ROLE_ADMIN");
+        } else {
+            authority = new SimpleGrantedAuthority("ROLE_USER");
+        }
+
+        authorities.add(authority);
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

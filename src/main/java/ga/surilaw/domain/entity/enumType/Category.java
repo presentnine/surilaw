@@ -1,4 +1,4 @@
-package ga.surilaw.entity.enumType;
+package ga.surilaw.domain.entity.enumType;
 
 import lombok.Getter;
 
