@@ -3,6 +3,7 @@ package ga.surilaw.service.precedent;
 import ga.surilaw.domain.dto.PrecedentSearchRequestDto;
 import ga.surilaw.domain.dto.PrecedentSearchResponseDto;
 import ga.surilaw.domain.entity.PrecedentBrief;
+import ga.surilaw.domain.entity.PrecedentDetail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -80,5 +81,44 @@ public class PrecedentSearchServiceImpl implements PrecedentSearchService{
         precedentSearchResponseDto.setPrecedentBriefList(precedentBriefList);
 
         return precedentSearchResponseDto;
+    }
+
+    @Override
+    public PrecedentDetail getDetailSearchResult(int idNum) {
+        PrecedentDetail precedentDetail = null;
+
+        String uri = openApi_Uri_PrecedentDetail + "OC=" + openApi_Key + "&search=2&target=prec&type=XML&ID=" + idNum;
+
+        Document document = null;
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(uri);
+            document.getDocumentElement().normalize();
+
+            Node precDetail = document.getElementsByTagName("PrecService").item(0);
+            if (precDetail.getNodeType() == Node.ELEMENT_NODE){
+                Element element = (Element) precDetail;
+                precedentDetail = new PrecedentDetail(
+                        Integer.parseInt(element.getElementsByTagName("판례정보일련번호").item(0).getTextContent()),
+                        element.getElementsByTagName("사건명").item(0).getTextContent(),
+                        element.getElementsByTagName("사건번호").item(0).getTextContent(),
+                        Integer.parseInt(element.getElementsByTagName("선고일자").item(0).getTextContent()),
+                        element.getElementsByTagName("법원명").item(0).getTextContent(),
+                        element.getElementsByTagName("사건종류명").item(0).getTextContent(),
+                        element.getElementsByTagName("판결유형").item(0).getTextContent(),
+                        element.getElementsByTagName("판시사항").item(0).getTextContent(),
+                        element.getElementsByTagName("판결요지").item(0).getTextContent(),
+                        element.getElementsByTagName("참조조문").item(0).getTextContent(),
+                        element.getElementsByTagName("참조판례").item(0).getTextContent(),
+                        element.getElementsByTagName("판례내용").item(0).getTextContent());
+            }
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        return precedentDetail;
     }
 }

@@ -20,4 +20,9 @@ public class PrecedentSearchController {
     public PrecedentSearchResponseDto searchList(@RequestBody PrecedentSearchRequestDto precedentSearchRequestDto){
         return precedentSearchService.getListSearchResult(precedentSearchRequestDto);
     }
+
+    @GetMapping("/detail")
+    public PrecedentDetail searchDetail(@RequestParam int idNum){
+        return precedentSearchService.getDetailSearchResult(idNum);
+    }
 }
