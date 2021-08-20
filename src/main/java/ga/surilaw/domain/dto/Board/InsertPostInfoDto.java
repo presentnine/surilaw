@@ -1,4 +1,4 @@
-package ga.surilaw.dto;
+package ga.surilaw.domain.dto.board;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InsertPostInfoDto {
     private Long postId;
-    private Long memberId;
+    private String memberId;
     private String category;
     private String title;
     private String content;

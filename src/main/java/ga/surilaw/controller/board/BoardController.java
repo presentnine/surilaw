@@ -1,10 +1,12 @@
 package ga.surilaw.controller.board;
 
 import ga.surilaw.common.mapper.PostInfoMapper;
-import ga.surilaw.dto.InsertPostInfoDto;
-import ga.surilaw.entity.PostInformation;
+import ga.surilaw.domain.dto.board.InsertPostInfoDto;
+import ga.surilaw.domain.entity.Member;
+import ga.surilaw.domain.entity.PostInformation;
 import ga.surilaw.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,20 +18,32 @@ public class BoardController {
 
     @PostMapping("/api/board/insert")
     public void writePost(@RequestBody InsertPostInfoDto insertPostInfoDto){
+
         //memberId 넣어줘야함.
-        PostInformation postInformation =postInfoMapper.insertDtoToEntity(insertPostInfoDto);
-        boardService.write(postInformation);
+        String memberId = "testMember";
+        insertPostInfoDto.setMemberId(memberId);
+        boardService.write(insertPostInfoDto);
     }
 
     @PutMapping("/api/board/update")
     public void updatePost(@RequestBody InsertPostInfoDto insertPostInfoDto){
+
         //memberId 넣어줘야함.
-        PostInformation postInformation =postInfoMapper.insertDtoToEntity(insertPostInfoDto);
-        boardService.update(postInformation);
+        String memberId = "testMember";
+        insertPostInfoDto.setMemberId(memberId);
+        boardService.write(insertPostInfoDto);
     }
 
     @DeleteMapping("/api/board/delete/{postId}")
     public void deletePost(@PathVariable(name = "postId") Long postId){
         boardService.delete(postId);
+    }
+
+
+    @GetMapping("/api/board/{postId}")
+    public ResponseEntity<?> readPost(@PathVariable(name = "postId") Long postId){
+        //mapper + memberId -> memberName으로의 변환 필요
+        boardService.read(postId);
+        return ResponseEntity.ok(boardService.read(postId));
     }
 }

@@ -1,4 +1,4 @@
-package ga.surilaw.entity;
+package ga.surilaw.domain.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

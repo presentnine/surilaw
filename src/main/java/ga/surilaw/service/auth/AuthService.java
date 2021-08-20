@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+/*@Service
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -27,4 +27,5 @@ public class AuthService {
         Member member = new Member(memberDTO.getEmail(), memberDTO.getMemberName(), passwordHash, 'C');
         memberRepository.save(member);
     }
-}
+}*/
+//Auth 에러로 주석처리 - 엄현식
