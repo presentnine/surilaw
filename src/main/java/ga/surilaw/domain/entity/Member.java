@@ -20,6 +20,10 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = "memberId")
+
+//Mapping하기 위해서 추가 - 엄현식
+@Builder
+@AllArgsConstructor
 public class Member implements Persistable<String>, UserDetails {
 
     @Id

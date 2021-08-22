@@ -21,6 +21,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 
+//@Value 에러 Mock으로 변경 -엄현식
 @Service
 public class MockPrecedentSearchServiceImpl implements PrecedentSearchService{
     //@Value("${openapi.uri.list}")

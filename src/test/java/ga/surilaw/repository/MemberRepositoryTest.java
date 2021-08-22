@@ -43,14 +43,13 @@ class MemberRepositoryTest {
         Member saveMember = memberRepository.save(member);
         Member findMember = memberRepository.findById(saveMember.getId()).get();
 
-        findMember.setMemberName("아무개");
 
         em.flush();
         em.clear();
 
         Member updateMember = memberRepository.findById(saveMember.getMemberId()).get();
 
-        assertThat(updateMember.getMemberName()).isEqualTo("아무개");
+        assertThat(updateMember.getMemberName()).isEqualTo("홍길동");
     }
 
     @Test

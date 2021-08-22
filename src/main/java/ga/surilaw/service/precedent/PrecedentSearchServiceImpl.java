@@ -17,6 +17,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+// @Value 에러 Mock으로 변경 -엄현식
+//@Service
 public class PrecedentSearchServiceImpl implements PrecedentSearchService{
     @Value("${openapi.uri.precedentList}")
     String openApi_Uri_PrecedentList;
