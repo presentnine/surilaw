@@ -1,6 +1,6 @@
 package ga.surilaw.domain.dto;
 
-import ga.surilaw.domain.entity.PrecedentBrief;
+import ga.surilaw.domain.entity.LawBrief;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrecedentSearchResponseDto {
+public class LawSearchResponseDto {
     int totalCount;
-    List<PrecedentBrief> precedentBriefList;
+    List<LawBrief> precedentBriefList;
 }
