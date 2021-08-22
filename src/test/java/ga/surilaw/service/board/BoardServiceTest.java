@@ -9,17 +9,17 @@ import ga.surilaw.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+//@Rollback(value = false)
 class BoardServiceTest {
 
     @Autowired BoardService boardService;
@@ -95,10 +95,6 @@ class BoardServiceTest {
                 .category(Category.INFO)
                 .build());
 
-        em.flush();
-        em.clear();
-
-
         //when
         boardService.delete(postInfo.getPostId());
 
@@ -130,7 +126,7 @@ class BoardServiceTest {
     }
 
     public Member insertSampleMember(){
-        Member member = new Member("sample@abc.abc","테스트","1234","1234",'C');
+        Member member = new Member("sample@abc.abc","테스트","1234",'C');
         return memberRepository.save(member);
     }
 }

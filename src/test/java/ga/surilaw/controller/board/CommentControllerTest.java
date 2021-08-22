@@ -36,9 +36,6 @@ class CommentControllerTest {
         Member m = insertSampleMember();
         PostInformation pi = insertSamplePost(m);
 
-        em.flush();
-        em.clear();
-
         InsertCommentDto insertCommentDto = new InsertCommentDto();
         insertCommentDto.setContent("TestData");
         insertCommentDto.setPostId(pi.getPostId());
@@ -55,7 +52,6 @@ class CommentControllerTest {
         .memberName("테스트유저")
         .email("SAMPLE@ABC.ABC")
         .passwordHash("1234")
-        .passwordSalt("1234")
         .memberType('C').build();
 
         return memberRepository.save(member);

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+//@Rollback(value = false)
 class CommentServiceTest {
 
     @Autowired CommentService commentService;
@@ -106,7 +106,7 @@ class CommentServiceTest {
     }
 
     public Member insertSampleMember(){
-        Member member = new Member("sample@abc.abc","테스트","1234","1234",'C');
+        Member member = new Member("sample@abc.abc","테스트","1234",'C');
         return memberRepository.save(member);
     }
 

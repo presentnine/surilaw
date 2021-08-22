@@ -8,7 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Getter
@@ -31,7 +30,6 @@ public class PostInformation extends BaseEntity{
 
     @Column(name = "category")
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("ALL")
     private Category category;
 
     @Column(name ="post_title")

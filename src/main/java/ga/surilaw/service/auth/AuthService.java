@@ -1,31 +1,46 @@
 package ga.surilaw.service.auth;
 
-import ga.surilaw.domain.dto.MemberDTO;
+import ga.surilaw.domain.dto.MemberSignUpRequestDto;
+import ga.surilaw.domain.dto.MemberLoginRequestDto;
 import ga.surilaw.domain.entity.Member;
 import ga.surilaw.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/*@Service
+@Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void singUp(MemberDTO memberDTO) {
+    public void signUp(MemberSignUpRequestDto memberSignUpRequestDto) {
         //아이디(이메일) 중복 확인
-        if (memberRepository.existsByEmail(memberDTO.getEmail())) {
+        if (memberRepository.existsByEmail(memberSignUpRequestDto.getEmail())) {
             throw new RuntimeException("중복된 아이디입니다");
         }
 
         //계정 저장
-        String passwordHash = passwordEncoder.encode(memberDTO.getPassword());
-        Member member = new Member(memberDTO.getEmail(), memberDTO.getMemberName(), passwordHash, 'C');
+        String passwordHash = passwordEncoder.encode(memberSignUpRequestDto.getPassword());
+        Member member = new Member(memberSignUpRequestDto.getEmail(), memberSignUpRequestDto.getMemberName(), passwordHash, 'C');
         memberRepository.save(member);
     }
-}*/
-//Auth 에러로 주석처리 - 엄현식
+
+    @Transactional
+    public String login(MemberLoginRequestDto memberLoginRequestDto) {
+        Member member = memberRepository.findByEmail(memberLoginRequestDto.getEmail()).orElseThrow(() ->
+                new RuntimeException("올바르지 않은 아이디입니다"));
+
+        if(!passwordEncoder.matches(memberLoginRequestDto.getPassword(), member.getPassword()))
+            throw new RuntimeException("올바르지 않은 비밀번호입니다");
+
+        String token = jwtTokenProvider.createToken(member);
+
+        return token;
+    }
+}
+

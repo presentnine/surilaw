@@ -6,6 +6,7 @@ import ga.surilaw.domain.entity.Member;
 import ga.surilaw.domain.entity.PostInformation;
 import ga.surilaw.repository.board.PostInfoRepository;
 import ga.surilaw.repository.member.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

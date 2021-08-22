@@ -2,8 +2,6 @@ package ga.surilaw.controller.board;
 
 import ga.surilaw.common.mapper.PostInfoMapper;
 import ga.surilaw.domain.dto.board.InsertPostInfoDto;
-import ga.surilaw.domain.entity.Member;
-import ga.surilaw.domain.entity.PostInformation;
 import ga.surilaw.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final PostInfoMapper postInfoMapper;
     private final BoardService boardService;
 
     @PostMapping("/api/board/insert")

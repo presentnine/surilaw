@@ -64,7 +64,7 @@ public class Comments extends BaseEntity{
     }
 
     //인원 추가
-   public void changeMember(Member member){ this.member = member; }
+    public void changeMember(Member member){ this.member = member; }
 
     //대댓글 추가
     public void addParent(Comments parentComment){

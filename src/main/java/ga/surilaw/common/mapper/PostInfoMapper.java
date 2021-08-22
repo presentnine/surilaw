@@ -2,7 +2,6 @@ package ga.surilaw.common.mapper;
 
 import ga.surilaw.domain.dto.board.InsertPostInfoDto;
 import ga.surilaw.domain.dto.board.ReadPostInfoDto;
-import ga.surilaw.domain.entity.Member;
 import ga.surilaw.domain.entity.PostInformation;
 import ga.surilaw.domain.entity.enumType.Category;
 import org.mapstruct.BeanMapping;

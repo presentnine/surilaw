@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+//@Rollback(value = false)
 class CommentRepositoryTest {
 
     @Autowired EntityManager em;
@@ -30,7 +30,7 @@ class CommentRepositoryTest {
     @Test
     public void insert() throws Exception{
         //given
-        Member member = new Member("sample@abc.abc","테스트","1234","1234",'C');
+        Member member = new Member("sample@abc.abc","테스트","1234",'C');
         memberRepository.save(member);
 
         PostInformation postInformation = PostInformation.builder()

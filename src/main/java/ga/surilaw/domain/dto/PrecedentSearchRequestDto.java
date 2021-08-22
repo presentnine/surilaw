@@ -7,13 +7,11 @@ import lombok.Setter;
 
 @Getter @Setter
 @AllArgsConstructor
-
-//테스트 에러로 NoArgs 추가 - 엄현식
 @NoArgsConstructor
-public class MemberDTO {
-
-    private String email;
-    private String memberName;
-    private String password;
-
+public class PrecedentSearchRequestDto {
+    String query;
+    Integer page;
+    String court;
+    String date;
+    String caseNum;
 }
