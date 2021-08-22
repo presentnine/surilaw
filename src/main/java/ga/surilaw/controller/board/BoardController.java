@@ -1,8 +1,8 @@
 package ga.surilaw.controller.board;
 
 import ga.surilaw.common.mapper.PostInfoMapper;
-import ga.surilaw.dto.InsertPostInfoDto;
-import ga.surilaw.entity.PostInformation;
+import ga.surilaw.domain.dto.InsertPostInfoDto;
+import ga.surilaw.domain.entity.PostInformation;
 import ga.surilaw.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

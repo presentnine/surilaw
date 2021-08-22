@@ -1,6 +1,7 @@
-package ga.surilaw.entity;
+package ga.surilaw.domain.entity;
 
-import ga.surilaw.entity.enumType.Category;
+import ga.surilaw.domain.entity.BaseEntity;
+import ga.surilaw.domain.entity.enumType.Category;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicUpdate
-public class PostInformation extends BaseEntity{
+public class PostInformation extends BaseEntity {
 
     @Id
     @GeneratedValue

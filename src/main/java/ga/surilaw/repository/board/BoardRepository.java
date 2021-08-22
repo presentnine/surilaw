@@ -1,6 +1,6 @@
 package ga.surilaw.repository.board;
 
-import ga.surilaw.entity.PostInformation;
+import ga.surilaw.domain.entity.PostInformation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

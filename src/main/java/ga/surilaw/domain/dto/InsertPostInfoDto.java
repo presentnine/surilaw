@@ -1,4 +1,4 @@
-package ga.surilaw.dto;
+package ga.surilaw.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

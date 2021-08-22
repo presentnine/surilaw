@@ -1,6 +1,6 @@
 package ga.surilaw.controller.auth;
 
-import ga.surilaw.domain.dto.MemberDTO;
+import ga.surilaw.domain.dto.MemberSignUpRequestDto;
 import ga.surilaw.domain.entity.Member;
 import ga.surilaw.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -16,7 +15,7 @@ import javax.persistence.EntityManager;
 @SpringBootTest
 @EnableJpaAuditing
 @Transactional
-@Rollback(value = false)
+//@Rollback(value = false)
 class AuthControllerTest {
 
     @Autowired
@@ -30,17 +29,34 @@ class AuthControllerTest {
 
     @Test
     public void signUp() {
-        MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setMemberName("김현구");
-        memberDTO.setEmail("1234@naver.com");
-        memberDTO.setPassword("1234");
-
-        authController.signUp(memberDTO);
+        MemberSignUpRequestDto memberSignUpRequestDto = new MemberSignUpRequestDto("1234@naver.com", "김현구", "1234");
+        authController.signUp(memberSignUpRequestDto);
 
         em.flush();
         em.clear();
 
-        Member findMember = memberRepository.findByEmail(memberDTO.getEmail()).get();
-        Assertions.assertThat(findMember.getMemberName()).isEqualTo(memberDTO.getMemberName());
+        Member findMember = memberRepository.findByEmail(memberSignUpRequestDto.getEmail()).get();
+        Assertions.assertThat(findMember.getMemberName()).isEqualTo(memberSignUpRequestDto.getMemberName());
+    }
+
+    @Test
+    public void signUpFailed() throws Exception{
+        MemberSignUpRequestDto member = new MemberSignUpRequestDto("1234@naver.com", "김현구", "1234");
+        authController.signUp(member);
+
+        em.flush();
+        em.clear();
+
+        MemberSignUpRequestDto duplicateMember = new MemberSignUpRequestDto("1234@naver.com", "김현구", "1234");
+
+        RuntimeException error = org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () ->
+        {
+            authController.signUp(duplicateMember);
+        });
+
+        String errorMessage = error.getMessage();
+
+        org.junit.jupiter.api.Assertions.assertEquals("중복된 아이디입니다", errorMessage);
+
     }
 }

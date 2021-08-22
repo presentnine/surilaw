@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class PrecedentSearchServiceImpl implements PrecedentSearchService{
     @Value("${openapi.uri.precedentList}")
     String openApi_Uri;

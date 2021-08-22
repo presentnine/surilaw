@@ -1,7 +1,7 @@
 package ga.surilaw.service.board;
 
-import ga.surilaw.entity.PostInformation;
-import ga.surilaw.entity.enumType.Category;
+import ga.surilaw.domain.entity.PostInformation;
+import ga.surilaw.domain.entity.enumType.Category;
 import ga.surilaw.repository.board.BoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
