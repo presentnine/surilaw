@@ -16,7 +16,6 @@ import javax.persistence.EntityManager;
 import java.util.Optional;
 
 @SpringBootTest
-@EnableJpaAuditing
 @Transactional
 class AuthServiceTest {
 

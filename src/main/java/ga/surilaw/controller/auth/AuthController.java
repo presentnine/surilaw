@@ -43,7 +43,7 @@ public class AuthController {
             String token = authService.login(memberLoginRequestDto);
             response = ResponseEntity.status(HttpStatus.OK).body(new MemberLoginResponseDto(token, "성공"));
         } catch (RuntimeException runtimeException) {
-            response = ResponseEntity.status(HttpStatus.OK).body(new MemberLoginResponseDto(null, runtimeException.getMessage()));
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MemberLoginResponseDto(null, runtimeException.getMessage()));
         }
 
         return response;
