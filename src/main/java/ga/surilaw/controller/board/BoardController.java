@@ -39,8 +39,7 @@ public class BoardController {
 
     @GetMapping("/api/board/{postId}")
     public ResponseEntity<?> readPost(@PathVariable(name = "postId") Long postId){
-        //mapper + memberId -> memberName으로의 변환 필요
-        boardService.read(postId);
+        //mapper + memberId -> memberName? or 반정규화
         return ResponseEntity.ok(boardService.read(postId));
     }
 }

@@ -11,8 +11,6 @@ import ga.surilaw.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService{
@@ -29,7 +27,7 @@ public class CommentServiceImpl implements CommentService{
         //Mapping
         Member member = memberRepository.getById(insertCommentDto.getMemberId());
         PostInformation post = postInfoRepository.getById(insertCommentDto.getPostId());
-        Comments comments = commentMapper.insertDtotoEntity(insertCommentDto, member, post);
+        Comments comments = commentMapper.insertDtoToEntity(insertCommentDto, member, post);
 
         //루트가 아니면 부모랑도 연결
         if(insertCommentDto.getParentId() != null){

@@ -31,13 +31,6 @@ public interface PostInfoMapper {
         }
         return postInformation;
     }
-
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "member.memberName", target = "memberName")
-    @Mapping(source = "postTitle", target = "title")
-    @Mapping(source = "postContent", target = "content")
-    ReadPostInfoDto entityToReadDto(PostInformation postInformation);
 }
 
 
