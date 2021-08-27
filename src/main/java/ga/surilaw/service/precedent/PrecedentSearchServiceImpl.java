@@ -1,11 +1,10 @@
 package ga.surilaw.service.precedent;
 
+import ga.surilaw.common.openapi.UriMaker;
 import ga.surilaw.domain.dto.PrecedentSearchRequestDto;
 import ga.surilaw.domain.dto.PrecedentSearchResponseDto;
 import ga.surilaw.domain.entity.PrecedentBrief;
 import ga.surilaw.domain.entity.PrecedentDetail;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,32 +19,20 @@ import java.util.ArrayList;
 // @Value 에러 Mock으로 변경 -엄현식
 //@Service
 public class PrecedentSearchServiceImpl implements PrecedentSearchService{
-    @Value("${openapi.uri.precedentList}")
-    String openApi_Uri_PrecedentList;
-    @Value("${openapi.uri.precedentDetail}")
-    String openApi_Uri_PrecedentDetail;
-    @Value("${openapi.key}")
-    String openApi_Key;
+    UriMaker uriMaker;
+
+    public PrecedentSearchServiceImpl(UriMaker uriMaker) {
+        this.uriMaker = uriMaker;
+    }
 
     @Override
     public PrecedentSearchResponseDto getListSearchResult(PrecedentSearchRequestDto precedentSearchRequestDto) {
+        String uri = uriMaker.makePrecedentListUri(precedentSearchRequestDto);
+
         PrecedentSearchResponseDto precedentSearchResponseDto = new PrecedentSearchResponseDto();
         int totalCount = 0;
         ArrayList<PrecedentBrief> precedentBriefList = new ArrayList<>();
 
-        String uri = openApi_Uri_PrecedentList + "OC=" + openApi_Key + "&search=2&target=prec&type=XML&query=" + precedentSearchRequestDto.getQuery();
-        if(precedentSearchRequestDto.getCourt() != null && !precedentSearchRequestDto.getCourt().isBlank()){
-            uri = uri + "&curt=" + precedentSearchRequestDto.getCourt();
-        }
-        if(precedentSearchRequestDto.getDate() != null && !precedentSearchRequestDto.getDate().isBlank()){
-            uri = uri + "&date=" + precedentSearchRequestDto.getDate();
-        }
-        if(precedentSearchRequestDto.getCaseNum() != null && !precedentSearchRequestDto.getCaseNum().isBlank()){
-            uri = uri + "&nb=" + precedentSearchRequestDto.getCaseNum();
-        }
-        if(precedentSearchRequestDto.getPage() != null && precedentSearchRequestDto.getPage() != 0){
-            uri = uri + "&page=" + precedentSearchRequestDto.getPage();
-        }
         Document document = null;
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(uri);
@@ -86,9 +73,9 @@ public class PrecedentSearchServiceImpl implements PrecedentSearchService{
 
     @Override
     public PrecedentDetail getDetailSearchResult(int idNum) {
-        PrecedentDetail precedentDetail = null;
+        String uri = uriMaker.makePrecedentDetailUri(idNum);
 
-        String uri = openApi_Uri_PrecedentDetail + "OC=" + openApi_Key + "&search=2&target=prec&type=XML&ID=" + idNum;
+        PrecedentDetail precedentDetail = null;
 
         Document document = null;
         try {

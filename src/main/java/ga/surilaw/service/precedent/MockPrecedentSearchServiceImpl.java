@@ -1,5 +1,6 @@
 package ga.surilaw.service.precedent;
 
+import ga.surilaw.common.openapi.UriMaker;
 import ga.surilaw.domain.dto.PrecedentSearchRequestDto;
 import ga.surilaw.domain.dto.PrecedentSearchResponseDto;
 import ga.surilaw.domain.entity.PrecedentBrief;
@@ -24,32 +25,19 @@ import java.util.ArrayList;
 //@Value 에러 Mock으로 변경 -엄현식
 @Service
 public class MockPrecedentSearchServiceImpl implements PrecedentSearchService{
-    //@Value("${openapi.uri.list}")
-    String openApi_Uri_PrecedentList = "https://www.law.go.kr/DRF/lawSearch.do?";
-    //@Value("${openapi.uri.detail}")
-    String openApi_Uri_PrecedentDetail = "https://www.law.go.kr/DRF/lawService.do?";
-    //@Value("${openapi.key}")
-    String openApi_Key = "test";
+    UriMaker uriMaker;
+
+    public MockPrecedentSearchServiceImpl(UriMaker uriMaker) {
+        this.uriMaker = uriMaker;
+    }
 
     @Override
     public PrecedentSearchResponseDto getListSearchResult(PrecedentSearchRequestDto precedentSearchRequestDto) {
+        String uri = uriMaker.makePrecedentListUri(precedentSearchRequestDto);
+
         PrecedentSearchResponseDto precedentSearchResponseDto = new PrecedentSearchResponseDto();
         int totalCount = 0;
         ArrayList<PrecedentBrief> precedentBriefList = new ArrayList<>();
-
-        String uri = openApi_Uri_PrecedentList + "OC=" + openApi_Key + "&search=2&target=prec&type=XML&query=" + precedentSearchRequestDto.getQuery();
-        if(precedentSearchRequestDto.getCourt() != null && !precedentSearchRequestDto.getCourt().isBlank()){
-            uri = uri + "&curt=" + precedentSearchRequestDto.getCourt();
-        }
-        if(precedentSearchRequestDto.getDate() != null && !precedentSearchRequestDto.getDate().isBlank()){
-            uri = uri + "&date=" + precedentSearchRequestDto.getDate();
-        }
-        if(precedentSearchRequestDto.getCaseNum() != null && !precedentSearchRequestDto.getCaseNum().isBlank()){
-            uri = uri + "&nb=" + precedentSearchRequestDto.getCaseNum();
-        }
-        if(precedentSearchRequestDto.getPage() != null && precedentSearchRequestDto.getPage() != 0){
-            uri = uri + "&page=" + precedentSearchRequestDto.getPage();
-        }
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -100,9 +88,9 @@ public class MockPrecedentSearchServiceImpl implements PrecedentSearchService{
 
     @Override
     public PrecedentDetail getDetailSearchResult(int idNum) {
-        PrecedentDetail precedentDetail = null;
+        String uri = uriMaker.makePrecedentDetailUri(idNum);
 
-        String uri = openApi_Uri_PrecedentDetail + "OC=" + openApi_Key + "&search=2&target=prec&type=XML&ID=" + idNum;
+        PrecedentDetail precedentDetail = null;
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();

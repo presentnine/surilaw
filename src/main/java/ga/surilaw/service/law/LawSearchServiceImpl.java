@@ -1,5 +1,6 @@
 package ga.surilaw.service.law;
 
+import ga.surilaw.common.openapi.UriMaker;
 import ga.surilaw.domain.dto.LawSearchRequestDto;
 import ga.surilaw.domain.dto.LawSearchResponseDto;
 import ga.surilaw.domain.entity.LawBrief;
@@ -17,29 +18,19 @@ import java.util.ArrayList;
 
 @Service
 public class LawSearchServiceImpl implements LawSearchService{
-    //@Value("${openapi.uri.list}")
-    String openApi_Uri_List = "https://www.law.go.kr/DRF/lawSearch.do?";
-    //@Value("${openapi.uri.detail}")
-    String openApi_Uri_Detail = "https://www.law.go.kr/DRF/lawService.do?";
-    //@Value("${openapi.key}")
-    String openApi_Key = "test";
+    UriMaker uriMaker;
+
+    public LawSearchServiceImpl(UriMaker uriMaker) {
+        this.uriMaker = uriMaker;
+    }
 
     @Override
     public LawSearchResponseDto getListSearchResult(LawSearchRequestDto lawSearchRequestDto) {
+        String uri = uriMaker.makeLawListUri(lawSearchRequestDto);
+
         LawSearchResponseDto lawSearchResponseDto = new LawSearchResponseDto();
         int totalCount = 0;
         ArrayList<LawBrief> lawBriefList = new ArrayList<>();
-
-        String uri = openApi_Uri_List + "OC=" + openApi_Key + "&search=2&target=law&type=XML&query=" + lawSearchRequestDto.getQuery();
-        if(lawSearchRequestDto.getDate() != null && !lawSearchRequestDto.getDate().isBlank()){
-            uri = uri + "&date=" + lawSearchRequestDto.getDate();
-        }
-        if(lawSearchRequestDto.getEfYd() != null && !lawSearchRequestDto.getEfYd().isBlank()){
-            uri = uri + "&efYd=" + lawSearchRequestDto.getEfYd();
-        }
-        if(lawSearchRequestDto.getAncYd() != null && lawSearchRequestDto.getAncYd().isBlank()){
-            uri = uri + "&ancYd=" + lawSearchRequestDto.getAncYd();
-        }
 
         Document document = null;
         try {
