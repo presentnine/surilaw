@@ -3,6 +3,7 @@ package ga.surilaw.controller.law;
 import ga.surilaw.domain.dto.LawSearchRequestDto;
 import ga.surilaw.domain.dto.LawSearchResponseDto;
 import ga.surilaw.service.law.LawSearchService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ public class LawSearchController {
     }
 
     @GetMapping("/api/law/list")
-    public LawSearchResponseDto searchList(@RequestBody LawSearchRequestDto lawSearchRequestDto){
-        return lawSearchService.getListSearchResult(lawSearchRequestDto);
+    public ResponseEntity<LawSearchResponseDto> searchList(@RequestBody LawSearchRequestDto lawSearchRequestDto){
+        return ResponseEntity.ok(lawSearchService.getListSearchResult(lawSearchRequestDto));
     }
 }
