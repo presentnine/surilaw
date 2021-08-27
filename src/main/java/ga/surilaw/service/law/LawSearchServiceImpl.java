@@ -1,6 +1,7 @@
 package ga.surilaw.service.law;
 
 import ga.surilaw.common.openapi.UriMaker;
+import ga.surilaw.common.openapi.XmlParser;
 import ga.surilaw.domain.dto.LawSearchRequestDto;
 import ga.surilaw.domain.dto.LawSearchResponseDto;
 import ga.surilaw.domain.entity.LawBrief;
@@ -19,45 +20,23 @@ import java.util.ArrayList;
 @Service
 public class LawSearchServiceImpl implements LawSearchService{
     UriMaker uriMaker;
+    XmlParser xmlParser;
 
-    public LawSearchServiceImpl(UriMaker uriMaker) {
+    public LawSearchServiceImpl(UriMaker uriMaker, XmlParser xmlParser) {
         this.uriMaker = uriMaker;
+        this.xmlParser = xmlParser;
     }
 
     @Override
     public LawSearchResponseDto getListSearchResult(LawSearchRequestDto lawSearchRequestDto) {
         String uri = uriMaker.makeLawListUri(lawSearchRequestDto);
 
-        LawSearchResponseDto lawSearchResponseDto = new LawSearchResponseDto();
-        int totalCount = 0;
-        ArrayList<LawBrief> lawBriefList = new ArrayList<>();
+        LawSearchResponseDto lawSearchResponseDto = null;
 
         Document document = null;
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(uri);
-            document.getDocumentElement().normalize();
-
-            Node totalCountNode = document.getElementsByTagName("totalCnt").item(0);
-            Element totalCountElement = (Element) totalCountNode;
-            totalCount = Integer.parseInt(totalCountElement.getTextContent());
-
-            NodeList lawList = document.getElementsByTagName("law");
-            for(int count = 0; count < lawList.getLength(); count++){
-                Node node = lawList.item(count);
-                if (node.getNodeType() == Node.ELEMENT_NODE){
-                    Element element = (Element) node;
-                    LawBrief lawBrief = new LawBrief(
-                            Integer.parseInt(element.getElementsByTagName("법령일련번호").item(0).getTextContent()),
-                            element.getElementsByTagName("현행연혁코드").item(0).getTextContent(),
-                            element.getElementsByTagName("법령명한글").item(0).getTextContent(),
-                            element.getElementsByTagName("법령약칭명").item(0).getTextContent(),
-                            Integer.parseInt(element.getElementsByTagName("공포일자").item(0).getTextContent()),
-                            element.getElementsByTagName("법령구분명").item(0).getTextContent(),
-                            Integer.parseInt(element.getElementsByTagName("시행일자").item(0).getTextContent())
-                    );
-                    lawBriefList.add(lawBrief);
-                }
-            }
+            lawSearchResponseDto = xmlParser.parseLawList(document);
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -65,9 +44,6 @@ public class LawSearchServiceImpl implements LawSearchService{
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
-
-        lawSearchResponseDto.setTotalCount(totalCount);
-        lawSearchResponseDto.setPrecedentBriefList(lawBriefList);
 
         return lawSearchResponseDto;
     }
