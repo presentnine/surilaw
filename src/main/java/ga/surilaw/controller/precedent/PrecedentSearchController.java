@@ -7,7 +7,6 @@ import ga.surilaw.service.precedent.PrecedentSearchService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/precedent")
 public class PrecedentSearchController {
     PrecedentSearchService precedentSearchService;
 
@@ -16,12 +15,12 @@ public class PrecedentSearchController {
     }
 
 
-    @GetMapping("/list")
+    @GetMapping("/api/precedent/list")
     public PrecedentSearchResponseDto searchList(@RequestBody PrecedentSearchRequestDto precedentSearchRequestDto){
         return precedentSearchService.getListSearchResult(precedentSearchRequestDto);
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/api/precedent/detail")
     public PrecedentDetail searchDetail(@RequestParam int idNum){
         return precedentSearchService.getDetailSearchResult(idNum);
     }

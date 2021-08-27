@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/law")
 public class LawSearchController {
     LawSearchService lawSearchService;
 
@@ -17,9 +16,8 @@ public class LawSearchController {
         this.lawSearchService = lawSearchService;
     }
 
-    @GetMapping("/list")
+    @GetMapping("/api/law/list")
     public LawSearchResponseDto searchList(@RequestBody LawSearchRequestDto lawSearchRequestDto){
-        // Todo: Change return value to Dto
         return lawSearchService.getListSearchResult(lawSearchRequestDto);
     }
 }
