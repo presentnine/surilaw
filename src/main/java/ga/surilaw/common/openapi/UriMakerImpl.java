@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UriMakerImpl implements UriMaker{
-    @Value("${openapi.uri.precedentList}")
+    @Value("${openapi.uri.list}")
     String OPENAPI_URI_LIST;
-    @Value("${openapi.uri.precedentDetail}")
+    @Value("${openapi.uri.detail}")
     String OPENAPI_URI_DETAIL;
     @Value("${openapi.key}")
     String OPENAPI_KEY;
@@ -98,7 +98,7 @@ public class UriMakerImpl implements UriMaker{
         if(lawSearchRequestDto.getEfYd() != null && !lawSearchRequestDto.getEfYd().isBlank()){
             uri = uri + "&efYd=" + lawSearchRequestDto.getEfYd();
         }
-        if(lawSearchRequestDto.getAncYd() != null && lawSearchRequestDto.getAncYd().isBlank()){
+        if(lawSearchRequestDto.getAncYd() != null && !lawSearchRequestDto.getAncYd().isBlank()){
             uri = uri + "&ancYd=" + lawSearchRequestDto.getAncYd();
         }
 
