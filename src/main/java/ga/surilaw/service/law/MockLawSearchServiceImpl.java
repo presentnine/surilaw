@@ -6,6 +6,7 @@ import ga.surilaw.domain.dto.LawSearchRequestDto;
 import ga.surilaw.domain.dto.LawSearchResponseDto;
 import ga.surilaw.domain.entity.LawBrief;
 import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,6 +22,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 
+@Service
 public class MockLawSearchServiceImpl implements LawSearchService{
     UriMaker uriMaker;
     XmlParser xmlParser;

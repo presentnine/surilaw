@@ -17,7 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-@Service
+//@Service
 public class LawSearchServiceImpl implements LawSearchService{
     UriMaker uriMaker;
     XmlParser xmlParser;
