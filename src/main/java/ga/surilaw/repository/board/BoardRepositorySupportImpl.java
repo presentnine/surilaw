@@ -44,7 +44,6 @@ public class BoardRepositorySupportImpl extends QuerydslRepositorySupport implem
         QComments parent = new QComments("parent");
         QComments child = new QComments("child");
 
-
         JPAQuery<Comments> query = queryFactory.from(parent)
                 .select(parent)
                 .where(parent.posts.postId.eq(postId)
