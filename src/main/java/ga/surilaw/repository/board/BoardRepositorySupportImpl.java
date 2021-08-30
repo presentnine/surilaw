@@ -1,15 +1,24 @@
 package ga.surilaw.repository.board;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ga.surilaw.domain.dto.board.ReadPostInfoDto;
-import ga.surilaw.domain.entity.*;
+import ga.surilaw.domain.dto.board.ReadPostListDto;
+import ga.surilaw.domain.dto.board.ReadPostShortDto;
+import ga.surilaw.domain.dto.board.pagination.FilterDto;
+import ga.surilaw.domain.entity.Comments;
+import ga.surilaw.domain.entity.PostInformation;
+import ga.surilaw.domain.entity.QComments;
+import ga.surilaw.domain.entity.QPostInformation;
+import ga.surilaw.domain.entity.enumType.Category;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -55,5 +64,55 @@ public class BoardRepositorySupportImpl extends QuerydslRepositorySupport implem
 
         return query.fetch();
     }
+
+    public ReadPostListDto getPageList(FilterDto filter, Pageable pageable){
+        QPostInformation postInfo = QPostInformation.postInformation;
+        ReadPostListDto readPostListDto = new ReadPostListDto();
+
+        JPQLQuery<ReadPostShortDto> query = from(postInfo).select(Projections.constructor(ReadPostShortDto.class,
+               postInfo.postId, postInfo.member.memberName, postInfo.postTitle, postInfo.category))
+                .leftJoin(postInfo.member);
+
+        if(filter != null){
+            //set filter;
+            query = query.where(
+                    eqCategory(filter.getCategory()),
+                    inTitle(filter.getTitle()),
+                    inWriter(filter.getName()),
+                    inContent(filter.getContent()));
+        }
+
+        //setting Dto
+        readPostListDto.setPostList(getQuerydsl().applyPagination(pageable,query).fetch());
+        readPostListDto.setSize(pageable.getPageSize());
+        readPostListDto.setPage(pageable.getPageNumber());
+        readPostListDto.setTotalElements((int)query.fetchCount());
+        readPostListDto.setTotalPages( (readPostListDto.getTotalPages() + readPostListDto.getSize() -1) / readPostListDto.getSize());
+        return readPostListDto;
+    }
+
+    private BooleanExpression eqCategory(Category category){
+        if(category != null){
+            System.out.println(category);
+            if(category != Category.ALL){
+                return QPostInformation.postInformation.category.eq(category);
+            }
+        }
+        return null;
+    }
+
+    private BooleanExpression inTitle(String title){
+        return StringUtils.hasLength(title) ? QPostInformation.postInformation.postTitle.contains(title) : null;
+    }
+
+    private BooleanExpression inWriter(String name){
+        return StringUtils.hasLength(name) ? QPostInformation.postInformation.member.memberName.contains(name) : null;
+    }
+
+    private BooleanExpression inContent(String content){
+        return StringUtils.hasLength(content) ? QPostInformation.postInformation.postContent.contains(content) : null;
+    }
+
+
 
 }

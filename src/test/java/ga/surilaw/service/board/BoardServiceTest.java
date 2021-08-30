@@ -3,6 +3,8 @@ package ga.surilaw.service.board;
 import ga.surilaw.domain.dto.board.InsertPostInfoDto;
 import ga.surilaw.domain.dto.board.ReadCommentDto;
 import ga.surilaw.domain.dto.board.ReadPostInfoDto;
+import ga.surilaw.domain.dto.board.ReadPostListDto;
+import ga.surilaw.domain.dto.board.pagination.PageableDto;
 import ga.surilaw.domain.entity.Comments;
 import ga.surilaw.domain.entity.Member;
 import ga.surilaw.domain.entity.PostInformation;
@@ -13,6 +15,8 @@ import ga.surilaw.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.parameters.P;
+import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -23,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-//@Rollback(value = false)
+@Rollback(value = false)
 class BoardServiceTest {
 
     @Autowired BoardService boardService;
@@ -132,6 +136,53 @@ class BoardServiceTest {
         assertThat(testChilds.get(3).getComment()).isEqualTo(comments2.getChild().get(3).getCommentContent());
     }
 
+    @Test
+    public void readList() throws Exception{
+        //given
+        //given
+        Member a = memberRepository.save(new Member("sample1@abcd.abc","memA","1234",'C'));
+        Member b = memberRepository.save(new Member("sample2@abcd.abc","memB","1234",'C'));
+
+        int askSize = 20;
+        int infoSize = 10;
+
+        for (int i=0; i<askSize; i++){
+            postInfoRepository.save(
+                    PostInformation.builder()
+                            .category(Category.ASK)
+                            .member(a)
+                            .postTitle("TestTitle"+i)
+                            .postContent("Test Content" +i)
+                            .build());
+        }
+
+        for (int i=0; i<infoSize; i++){
+            postInfoRepository.save(
+                    PostInformation.builder()
+                            .category(Category.INFO)
+                            .member(b)
+                            .postTitle("TestTitle"+i)
+                            .postContent("Test Content" +i)
+                            .build());
+        }
+
+        em.flush();
+        em.clear();
+
+        PageableDto pageableDto = new PageableDto();
+        pageableDto.setSize(5);
+        pageableDto.setPage(1);
+        pageableDto.setOrder("DESC");
+        pageableDto.setFilter("category:ALL,member:memA,title:1");
+
+        //when
+        ReadPostListDto readPostListDto = boardService.readList(pageableDto);
+
+        //then
+        assertThat(readPostListDto.getPostList().size()).isEqualTo(5);
+        assertThat(readPostListDto.getTotalElements()).isEqualTo(12);
+        assertThat(readPostListDto.getPostList().get(0).getId()).isGreaterThan(readPostListDto.getPostList().get(1).getId()); //DESC
+    }
 
     public Member insertMember(){
         Member member = new Member("sample@abc.abc","테스트","1234",'C');

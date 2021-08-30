@@ -2,6 +2,7 @@ package ga.surilaw.controller.board;
 
 import ga.surilaw.common.mapper.PostInfoMapper;
 import ga.surilaw.domain.dto.board.InsertPostInfoDto;
+import ga.surilaw.domain.dto.board.pagination.PageableDto;
 import ga.surilaw.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,10 @@ public class BoardController {
         boardService.delete(postId);
     }
 
+    @GetMapping("/api/board/list")
+    public ResponseEntity<?> readPostList(@ModelAttribute PageableDto pageableDto){
+        return ResponseEntity.ok(boardService.readList(pageableDto));
+    }
 
     @GetMapping("/api/board/{postId}")
     public ResponseEntity<?> readPost(@PathVariable(name = "postId") Long postId){

@@ -1,20 +1,27 @@
 package ga.surilaw.repository.board;
 
 import ga.surilaw.domain.dto.board.ReadPostInfoDto;
+import ga.surilaw.domain.dto.board.ReadPostListDto;
+import ga.surilaw.domain.dto.board.pagination.FilterDto;
 import ga.surilaw.domain.entity.Comments;
 import ga.surilaw.domain.entity.Member;
 import ga.surilaw.domain.entity.PostInformation;
+import ga.surilaw.domain.entity.QPostInformation;
 import ga.surilaw.domain.entity.enumType.Category;
 import ga.surilaw.repository.member.MemberRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -40,8 +47,51 @@ class BoardRepositorySupportImplTest {
         ReadPostInfoDto readPostInfoDto = boardRepositorySupport.readPost(postInformation.getPostId());
 
         //then
-        Assertions.assertThat(readPostInfoDto.getPostId()).isEqualTo(postInformation.getPostId());
-        Assertions.assertThat(readPostInfoDto.getUserName()).isEqualTo(member.getMemberName());
+        assertThat(readPostInfoDto.getPostId()).isEqualTo(postInformation.getPostId());
+        assertThat(readPostInfoDto.getUserName()).isEqualTo(member.getMemberName());
+    }
+    @Test
+    public void getPageList() throws Exception{
+        //given
+        Member a = memberRepository.save(new Member("sample1@abcd.abc","memA","1234",'C'));
+        Member b = memberRepository.save(new Member("sample2@abcd.abc","memB","1234",'C'));
+
+        int askSize = 20;
+        int infoSize = 10;
+
+        for (int i=0; i<askSize; i++){
+            postInfoRepository.save(
+                    PostInformation.builder()
+                    .category(Category.ASK)
+                    .member(a)
+                    .postTitle("TestTitle"+i)
+                    .postContent("Test Content" +i)
+                    .build());
+        }
+
+        for (int i=0; i<infoSize; i++){
+            postInfoRepository.save(
+                    PostInformation.builder()
+                            .category(Category.INFO)
+                            .member(b)
+                            .postTitle("TestTitle"+i)
+                            .postContent("Test Content" +i)
+                            .build());
+        }
+
+        em.flush();
+        em.clear();
+
+        FilterDto filterDto = new FilterDto("ASK", null, null, "1");
+        Pageable pageable = PageRequest.of(0,5, Sort.Direction.DESC, "postId");
+
+        //when
+        ReadPostListDto readPostListDto = boardRepositorySupport.getPageList(filterDto, pageable);
+
+        //then
+        assertThat(readPostListDto.getPostList().size()).isEqualTo(5);
+        assertThat(readPostListDto.getTotalElements()).isEqualTo(11); //1 + 10~19
+        assertThat(readPostListDto.getPostList().get(0).getId()).isGreaterThan(readPostListDto.getPostList().get(1).getId()); //DESC
     }
     
     @Test
@@ -57,11 +107,12 @@ class BoardRepositorySupportImplTest {
         List<Comments> commentLists = boardRepositorySupport.readComment(postInformation.getPostId());
 
         //then
-        Assertions.assertThat(commentLists.size()).isEqualTo(1); //기본자식은 하나
-        Assertions.assertThat(commentLists.get(0).getCommentContent()).isEqualTo(comments.getCommentContent());
-        Assertions.assertThat(commentLists.get(0).getChild().size()).isEqualTo(10); //대댓글 10개
-        Assertions.assertThat(commentLists.get(0).getChild().get(5).getCommentContent()).isEqualTo(comments.getChild().get(5).getCommentContent());
+        assertThat(commentLists.size()).isEqualTo(1); //기본자식은 하나
+        assertThat(commentLists.get(0).getCommentContent()).isEqualTo(comments.getCommentContent());
+        assertThat(commentLists.get(0).getChild().size()).isEqualTo(10); //대댓글 10개
+        assertThat(commentLists.get(0).getChild().get(5).getCommentContent()).isEqualTo(comments.getChild().get(5).getCommentContent());
     }
+
 
     public void addChild(Member member, PostInformation postInformation, Comments parent, int times){
         for(int i=0; i<times; i++){
