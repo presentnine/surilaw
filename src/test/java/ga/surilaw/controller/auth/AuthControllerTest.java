@@ -1,5 +1,7 @@
 package ga.surilaw.controller.auth;
 
+import ga.surilaw.common.response.AuthException;
+import ga.surilaw.domain.dto.MemberLoginRequestDto;
 import ga.surilaw.domain.dto.MemberSignUpRequestDto;
 import ga.surilaw.domain.dto.MemberSignUpResponseDto;
 import ga.surilaw.domain.entity.Member;
@@ -50,11 +52,66 @@ class AuthControllerTest {
 
         MemberSignUpRequestDto duplicateMember = new MemberSignUpRequestDto("1234@naver.com", "김현구", "1234");
 
-        ResponseEntity<MemberSignUpResponseDto> result = authController.signUp(duplicateMember);
+        AuthException error = org.junit.jupiter.api.Assertions.assertThrows(AuthException.class, () ->
+        {
+            authController.signUp(duplicateMember);
+        });
 
-        String errorMessage = result.getBody().getMessage();
+        String errorMessage = error.getMessage();
 
         org.junit.jupiter.api.Assertions.assertEquals("중복된 아이디입니다", errorMessage);
 
+    }
+
+    @Test
+    void login() {
+        MemberSignUpRequestDto memberSignUpRequestDto = new MemberSignUpRequestDto("1234@naver.com", "김현구", "1234");
+        authController.signUp(memberSignUpRequestDto);
+
+        em.flush();
+        em.clear();
+
+        MemberLoginRequestDto memberLoginRequestDto = new MemberLoginRequestDto("1234@naver.com", "1234");
+        authController.login(memberLoginRequestDto);
+    }
+
+    @Test
+    void loginFailedByWrongId() {
+        MemberSignUpRequestDto memberSignUpRequestDto = new MemberSignUpRequestDto("1234@naver.com", "김현구", "1234");
+        authController.signUp(memberSignUpRequestDto);
+
+        em.flush();
+        em.clear();
+
+        MemberLoginRequestDto memberLoginRequestDto = new MemberLoginRequestDto("123@naver.com", "1234");
+
+        AuthException error = org.junit.jupiter.api.Assertions.assertThrows(AuthException.class, () ->
+        {
+            authController.login(memberLoginRequestDto);
+        });
+
+        String errorMessage = error.getMessage();
+
+        org.junit.jupiter.api.Assertions.assertEquals("올바르지 않은 아이디입니다", errorMessage);
+    }
+
+    @Test
+    void loginFailedByWrongPassword() {
+        MemberSignUpRequestDto memberSignUpRequestDto = new MemberSignUpRequestDto("1234@naver.com", "김현구", "1234");
+        authController.signUp(memberSignUpRequestDto);
+
+        em.flush();
+        em.clear();
+
+        MemberLoginRequestDto memberLoginRequestDto = new MemberLoginRequestDto("1234@naver.com", "123");
+
+        AuthException error = org.junit.jupiter.api.Assertions.assertThrows(AuthException.class, () ->
+        {
+            authController.login(memberLoginRequestDto);
+        });
+
+        String errorMessage = error.getMessage();
+
+        org.junit.jupiter.api.Assertions.assertEquals("올바르지 않은 비밀번호입니다", errorMessage);
     }
 }
