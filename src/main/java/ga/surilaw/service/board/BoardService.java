@@ -1,11 +1,15 @@
 package ga.surilaw.service.board;
 
 import ga.surilaw.domain.dto.board.InsertPostInfoDto;
+import ga.surilaw.domain.dto.board.ReadPostInfoDto;
+import ga.surilaw.domain.dto.board.ReadPostListDto;
+import ga.surilaw.domain.dto.board.pagination.PageableDto;
 import ga.surilaw.domain.entity.PostInformation;
 
 public interface BoardService {
     Long write(InsertPostInfoDto insertPostInfoDto);
     Long update(InsertPostInfoDto insertPostInfoDto);
     void delete(Long postId);
-    PostInformation read(Long postId);
+    ReadPostInfoDto read(Long postId);
+    ReadPostListDto readList(PageableDto pageableDto);
 }

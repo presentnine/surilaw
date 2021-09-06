@@ -59,6 +59,4 @@ class CommentRepositoryTest {
         assertThat(findComments.getCommentId()).isEqualTo(findComments.getCommentId());
         assertThat(findComments).isEqualTo(savedComments);
     }
-
-
 }

@@ -70,6 +70,7 @@ public class Comments extends BaseEntity{
     public void addParent(Comments parentComment){
         //자식한테 부모 추가
         this.parent = parentComment;
+        this.child = null; //자식이 있을 수 없음.
 
         //부모한테는 자식 추가
         parentComment.getChild().add(this);
