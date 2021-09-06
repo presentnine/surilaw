@@ -1,5 +1,6 @@
 package ga.surilaw.service.auth;
 
+import ga.surilaw.common.response.AuthException;
 import ga.surilaw.domain.dto.MemberLoginRequestDto;
 import ga.surilaw.domain.dto.MemberSignUpRequestDto;
 import ga.surilaw.domain.entity.Member;
@@ -16,7 +17,6 @@ import javax.persistence.EntityManager;
 import java.util.Optional;
 
 @SpringBootTest
-@EnableJpaAuditing
 @Transactional
 class AuthServiceTest {
 
@@ -49,7 +49,7 @@ class AuthServiceTest {
 
         MemberSignUpRequestDto duplicateMember = new MemberSignUpRequestDto("1234@naver.com", "김현구", "1234");
 
-        RuntimeException error = org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () ->
+        AuthException error = org.junit.jupiter.api.Assertions.assertThrows(AuthException.class, () ->
         {
             authService.signUp(duplicateMember);
         });
@@ -82,7 +82,7 @@ class AuthServiceTest {
 
         MemberLoginRequestDto memberLoginRequestDto = new MemberLoginRequestDto("123@naver.com", "1234");
 
-        RuntimeException error = org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () ->
+        AuthException error = org.junit.jupiter.api.Assertions.assertThrows(AuthException.class, () ->
         {
             authService.login(memberLoginRequestDto);
         });
@@ -102,7 +102,7 @@ class AuthServiceTest {
 
         MemberLoginRequestDto memberLoginRequestDto = new MemberLoginRequestDto("1234@naver.com", "123");
 
-        RuntimeException error = org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () ->
+        AuthException error = org.junit.jupiter.api.Assertions.assertThrows(AuthException.class, () ->
         {
             authService.login(memberLoginRequestDto);
         });

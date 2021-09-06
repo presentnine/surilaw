@@ -1,5 +1,9 @@
 package ga.surilaw.service.auth;
 
+import ga.surilaw.common.response.AuthException;
+import ga.surilaw.common.response.DuplicatedEmailException;
+import ga.surilaw.common.response.EmailNotFoundException;
+import ga.surilaw.common.response.PasswordNotMatchException;
 import ga.surilaw.domain.dto.MemberSignUpRequestDto;
 import ga.surilaw.domain.dto.MemberLoginRequestDto;
 import ga.surilaw.domain.entity.Member;
@@ -21,7 +25,7 @@ public class AuthService {
     public void signUp(MemberSignUpRequestDto memberSignUpRequestDto) {
         //아이디(이메일) 중복 확인
         if (memberRepository.existsByEmail(memberSignUpRequestDto.getEmail())) {
-            throw new RuntimeException("중복된 아이디입니다");
+            throw new DuplicatedEmailException("중복된 아이디입니다");
         }
 
         //계정 저장
@@ -33,10 +37,10 @@ public class AuthService {
     @Transactional
     public String login(MemberLoginRequestDto memberLoginRequestDto) {
         Member member = memberRepository.findByEmail(memberLoginRequestDto.getEmail()).orElseThrow(() ->
-                new RuntimeException("올바르지 않은 아이디입니다"));
+                new EmailNotFoundException("올바르지 않은 아이디입니다"));
 
         if(!passwordEncoder.matches(memberLoginRequestDto.getPassword(), member.getPassword()))
-            throw new RuntimeException("올바르지 않은 비밀번호입니다");
+            throw new PasswordNotMatchException("올바르지 않은 비밀번호입니다");
 
         String token = jwtTokenProvider.createToken(member);
 

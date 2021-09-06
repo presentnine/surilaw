@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 //@Rollback(value = false)
 class MemberRepositoryTest {
 
@@ -35,21 +34,6 @@ class MemberRepositoryTest {
         Member findMember = result.get();
 
         assertThat(findMember).isEqualTo(saveMember);
-    }
-
-    @Test
-    public void update(){
-        Member member = new Member("asdf@naver.com", "홍길동", "???", 'C');
-        Member saveMember = memberRepository.save(member);
-        Member findMember = memberRepository.findById(saveMember.getId()).get();
-
-
-        em.flush();
-        em.clear();
-
-        Member updateMember = memberRepository.findById(saveMember.getMemberId()).get();
-
-        assertThat(updateMember.getMemberName()).isEqualTo("홍길동");
     }
 
     @Test
