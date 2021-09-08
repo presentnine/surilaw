@@ -4,10 +4,10 @@ import ga.surilaw.domain.dto.PrecedentSearchRequestDto;
 import ga.surilaw.domain.dto.PrecedentSearchResponseDto;
 import ga.surilaw.domain.entity.PrecedentDetail;
 import ga.surilaw.service.precedent.PrecedentSearchService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/precedent")
 public class PrecedentSearchController {
     PrecedentSearchService precedentSearchService;
 
@@ -16,13 +16,13 @@ public class PrecedentSearchController {
     }
 
 
-    @GetMapping("/list")
-    public PrecedentSearchResponseDto searchList(@RequestBody PrecedentSearchRequestDto precedentSearchRequestDto){
-        return precedentSearchService.getListSearchResult(precedentSearchRequestDto);
+    @GetMapping("/api/precedent/list")
+    public ResponseEntity<PrecedentSearchResponseDto> searchList(@RequestBody PrecedentSearchRequestDto precedentSearchRequestDto){
+        return ResponseEntity.ok(precedentSearchService.getListSearchResult(precedentSearchRequestDto));
     }
 
-    @GetMapping("/detail")
-    public PrecedentDetail searchDetail(@RequestParam int idNum){
-        return precedentSearchService.getDetailSearchResult(idNum);
+    @GetMapping("/api/precedent/detail")
+    public ResponseEntity<PrecedentDetail> searchDetail(@RequestParam int idNum){
+        return ResponseEntity.ok(precedentSearchService.getDetailSearchResult(idNum));
     }
 }
